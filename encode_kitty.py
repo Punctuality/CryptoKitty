@@ -5,11 +5,8 @@
 
 
 from PIL import Image
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import numpy as np
 import random as rnd
-import scipy.misc
 
 filein = str(input('Input FileIn path:'))
 
@@ -47,7 +44,6 @@ s = str(input("Text to crypt into kitty:"))
 to_crypt = to_bin(s)
 print(to_crypt)
 Img_write = transforming_the_image(to_crypt, Img)
-#scipy.misc.imsave(fileout, Img_write)
 imm = Image.fromarray(Img_write)
 imm.save(fileout)
 print("Jobs Finished.")

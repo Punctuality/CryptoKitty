@@ -2,18 +2,26 @@
 # coding: utf-8
 
 # In[1]:
-
+from PIL import Image
 import numpy as np
 import random as rnd
-from tqdm import tqdm as bar
 
 filein = str(input('Input FileIn name (without .format):'))+".bmp"
+fileout = str(input('Input FileOut name (if is bigger than 20000 symb itll be used):'))
 
 def extracting_from_image(img):
+    finish = '00000000'
     img_r = img.reshape(-1,3)
     arr = np.array([x for x in range(1,len(img_r))])
-    for i in bar(range(1,len(img_r)-1)):
+    p = 0
+    for i in (range(1,len(img_r)-1)):
         arr[i] = int(sum(img_r[i])) % 2
+        if arr[i] == 0:
+            p += 1
+            if p == 8:
+                break
+        else:
+            p = 0
     return arr[1:]
 
 def to_chr(bin_text):
@@ -31,10 +39,13 @@ def extract_from_extracted(ex_text, finish = '00000000'):
             x = x[:i]
     return x
 
-ex_out = extracting_from_image(mpimg.imread(filein))
+ex_out = extracting_from_image(np.array(Image.open(filein)))
 out = extract_from_extracted(ex_out, '00000000'[:-1])
 
 res = to_chr(out)
-
-print(res)
-
+if len(res) < 20000:
+    print(res)
+else:
+    f = open(fileout, 'w')
+    f.writelines(res)
+    f.close

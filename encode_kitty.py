@@ -42,7 +42,7 @@ print('Amount of symbols: ', str(int(len(Img.reshape(-1,1))/8/2)))
 fileout = str(input('Input FileOut name (without .format):'))+'.bmp'
 s = str(input("Text to crypt into kitty:"))
 to_crypt = to_bin(s)
-print(to_crypt)
+#print(to_crypt)
 Img_write = transforming_the_image(to_crypt, Img)
 imm = Image.fromarray(Img_write)
 imm.save(fileout)

@@ -35,15 +35,3 @@ def to_bin(text): #Результат: 1100001 1100010 1100011
     for i in text:
         res += append(bin(ord(i))[2:])
     return res
-
-#Img = np.array(Image.open(filein))#mpimg.imread(filein, format = "jpg")
-#print('You could write ',str(len(Img.reshape(-1,1))/8/1024)+' kb of text.')
-#print('Amount of symbols: ', str(int(len(Img.reshape(-1,1))/8/2)))
-#fileout = str(input('Input FileOut name (without .format):'))+'.bmp'
-#s = str(input("Text to crypt into kitty:"))
-#to_crypt = to_bin(s)
-#print(to_crypt)
-#Img_write = transforming_the_image(to_crypt, Img)
-#imm = Image.fromarray(Img_write)
-#imm.save(fileout)
-#print("Jobs Finished.")

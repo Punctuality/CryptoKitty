@@ -34,18 +34,10 @@ def extract_from_extracted(ex_text, finish = '00000000'):
     x = ''
     for i in ex_text:
         x += str(i)
+    #print(x[0:16]) #
+    #if not x[0:8] == '00000000':
+    #    return False
     for i in range(0,len(x),8):
         if x[i:i+7] == finish:
             x = x[:i]
     return x
-
-#ex_out = extracting_from_image(np.array(Image.open(filein)))
-#out = extract_from_extracted(ex_out, '00000000'[:-1])
-
-#res = to_chr(out)
-#if len(res) < 20000:
-#    print(res)
-#else:
-#    f = open(fileout, 'w')
-#    f.writelines(res)
-#    f.close

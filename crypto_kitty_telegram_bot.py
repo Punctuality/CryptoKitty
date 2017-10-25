@@ -4,7 +4,7 @@
 # In[1]:
 
 
-token = '449752038:AAEZFDEWFo2XFwSR2WH9Za8wxPetINhRIoU'
+token = 'Your_API'
 
 import telebot
 from decode_kitty_Tbot import *

@@ -1,15 +1,10 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
-token = 'Your_API'
+token = 'Your_Api'
 
 import telebot
 from decode_kitty_Tbot import *
 from encode_kitty_Tbot import *
 from crypt_class import *
+from rnd_img_taker import *
 import PIL.Image as Image
 import pickle as pk
 import random
@@ -18,14 +13,15 @@ import numpy
 bot = telebot.TeleBot(token)
 
 
-# In[ ]:
-
 
 de_en_chs = telebot.types.ReplyKeyboardMarkup()
 doit = telebot.types.ReplyKeyboardMarkup()
 doit.row('/doit', '/choose')
 de_en_chs.row("/Encoder","/Decoder")
 rem_chs = telebot.types.ReplyKeyboardRemove()
+doit_e = telebot.types.ReplyKeyboardMarkup()
+doit_e.row('/rnd_img','/doit', '/choose')
+
 
 src = ''
 Img = True
@@ -77,7 +73,7 @@ def start_polling():
         def encoder(message):
             Encoder = True
             save(Encoder, 'path/en_'+str(message.chat.id))
-            bot.send_message(message.chat.id, 'You`ve choosed Encoder programm\n Send him (bot) photo \n(like document, not like photo, only jpg or bmp) and text \nThen print /doit', reply_markup=doit)
+            bot.send_message(message.chat.id, 'You`ve choosed Encoder programm\n Send him (bot) photo \n(like document, not like photo, only jpg or bmp) and text \nThen print /doit\nOr send him search text\nThen print /rnd_img\nAnd you will add random image from www\nThen send him crypt text and print /doit', reply_markup=doit_e)
 
         @bot.message_handler(func=lambda message: True,commands=['Decoder'])
         def decoder(message):
@@ -124,7 +120,22 @@ def start_polling():
                     print('User '+str(message.chat.id)+' have his text Decoded.')
                 except:
                     bot.send_message(message.chat.id, 'Some prouble caused.\nProbably you didn`t send me a photo.')
-
+        
+        @bot.message_handler(func=lambda message: True, commands=['rnd_img'])
+        def add_rnd_img(message):
+            try:
+				text = dcrypt(opop('path/text_'+str(message.chat.id)))
+            except:
+				text = 'lovely cat'
+			o = comp(text)[0]+'.jpg'
+            try:
+                bot.send_photo(message.chat.id, open(o, 'rb'), "Document (Photo) added")
+                with open('path/imp_'+'e_'+str(message.chat.id), 'wb') as f:
+                    pk.dump(o, f)
+            except Exception as e:
+                bot.reply_to(message,e )
+                
+        
         @bot.message_handler(func=lambda message: True,content_types=['text'])
         def text_add(message):
             text = message.text
@@ -153,7 +164,7 @@ def start_polling():
                 print('User '+str(message.chat.id)+' added the photo')
                 with open(src, 'wb') as new_file:
                     new_file.write(downloaded_file)
-                bot.reply_to(message,"Document (Photo) added")
+                bot.send_photo(message.chat.id, open(src, 'rb'), "Document (Photo) added")
                 with open('path/imp_'+a+str(message.chat.id), 'wb') as f:
                     pk.dump(src, f)
             except Exception as e:
@@ -164,5 +175,6 @@ def start_polling():
         start_polling()
         print('Trouble Caused!!!')
         
+print('Server online.\nLog:')
 start_polling()
 

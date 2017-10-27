@@ -1,3 +1,15 @@
+
+# coding: utf-8
+
+# In[4]:
+
+
+
+# coding: utf-8
+
+# In[1]:
+
+
 token = 'Your_Api'
 
 import telebot
@@ -6,12 +18,14 @@ from encode_kitty_Tbot import *
 from crypt_class import *
 from rnd_img_taker import *
 import PIL.Image as Image
-import pickle as pk
+from open_inst import * 
 import random
 import numpy
 
 bot = telebot.TeleBot(token)
 
+
+# In[2]:
 
 
 de_en_chs = telebot.types.ReplyKeyboardMarkup()
@@ -21,6 +35,8 @@ de_en_chs.row("/Encoder","/Decoder")
 rem_chs = telebot.types.ReplyKeyboardRemove()
 doit_e = telebot.types.ReplyKeyboardMarkup()
 doit_e.row('/rnd_img','/doit', '/choose')
+doit_fd = telebot.types.ReplyKeyboardMarkup()
+doit_fd.row('/send', '/choose')
 
 
 src = ''
@@ -29,14 +45,7 @@ text = ''
 
 Encoder = True
 
-def save(ob, p):
-    with open(p, 'wb') as f:
-        pk.dump(ob, f)
-def opop(p):
-    x = 0
-    with open(p, 'rb') as f:
-        x = pk.load(f)
-    return x
+
 def start_polling():
     try:
         @bot.message_handler(func=lambda message: True, commands=['choose'], content_types=['text'])
@@ -63,23 +72,32 @@ def start_polling():
         @bot.message_handler(func=lambda message: True, commands=['do_not_doit'], content_types=['text'])
         def okay(message):
             bot.send_message(message.chat.id, "Okay, okay...")
-
-
+        @bot.message_handler(func=lambda message: True, commands=['write_feedback'], content_types=['text'])
+        def fd(message):
+            bot.send_message(message.chat.id, "Write me a feedback\nThen print /send", reply_markup=doit_fd)
+        @bot.message_handler(func=lambda message: True, commands=['send'], content_types=['text'])
+        def sndfd(message):
+            text = dcrypt(opop('path/text_'+str(message.chat.id)))
+            fdbk = opop('feedback_data')
+            fdbk.append([str(message.chat.id), text])
+            save(fdbk, 'feedback_data')
+            bot.send_message(message.chat.id, "Your message sended, thanks!")
+            
         @bot.message_handler(func=lambda message: True, commands=['help'], content_types=['text'])
         def help_mes(message):
-            bot.send_message(message.chat.id, "Type /start or /choose to choose programm \n Encoder: Crypt text to img \n Decoder: Extract text from img\nCommand list:\n /start\n /choose\n /help\n /Encoder\n /Decoder\n /doit\n /do_not_doit\n\n All questions to me:\nhttps://vk.com/alvspunctualiti", reply_markup=rem_chs)
+            bot.send_message(message.chat.id, "Type /start or /choose to choose programm \n Encoder: Crypt text to img \n Decoder: Extract text from img\nCommand list:\n /start\n /choose\n /help\n /Encoder\n /Decoder\n /doit\n /rnd_img\n /do_not_doit\n /write_feedback\n /send\n\n All questions to me:\nhttps://vk.com/alvspunctualiti", reply_markup=rem_chs)
 
         @bot.message_handler(func=lambda message: True,commands=['Encoder'])
         def encoder(message):
             Encoder = True
             save(Encoder, 'path/en_'+str(message.chat.id))
-            bot.send_message(message.chat.id, 'You`ve choosed Encoder programm\n Send him (bot) photo \n(like document, not like photo, only jpg or bmp) and text \nThen print /doit\nOr send him search text\nThen print /rnd_img\nAnd you will add random image from www\nThen send him crypt text and print /doit', reply_markup=doit_e)
+            bot.send_message(message.chat.id, 'You`ve choosed Encoder programm\n Send me photo \n(like document, not like photo, only jpg or bmp) and text \nThen print /doit\nOr send me search text\nThen print /rnd_img\nAnd you will add random image from www\nThen send me crypt text and print /doit', reply_markup=doit_e)
 
         @bot.message_handler(func=lambda message: True,commands=['Decoder'])
         def decoder(message):
             Encoder = False
             save(Encoder, 'path/en_'+str(message.chat.id))
-            bot.send_message(message.chat.id, 'You`ve choosed Decoder programm \nSend him (bot) photo \n(like document, not like photo, and only bmp) \nThen print /doit', reply_markup=doit)
+            bot.send_message(message.chat.id, 'You`ve choosed Decoder programm \nSend me photo \n(like document, not like photo, and only bmp) \nThen print /doit', reply_markup=doit)
 
         @bot.message_handler(func=lambda message: True, commands=['doit'])
         def coding(message):
@@ -124,10 +142,10 @@ def start_polling():
         @bot.message_handler(func=lambda message: True, commands=['rnd_img'])
         def add_rnd_img(message):
             try:
-				text = dcrypt(opop('path/text_'+str(message.chat.id)))
+                text = dcrypt(opop('path/text_'+str(message.chat.id)))
             except:
-				text = 'lovely cat'
-			o = comp(text)[0]+'.jpg'
+                text = 'lovely cat'
+            o = comp(text)[0]+'.jpg'
             try:
                 bot.send_photo(message.chat.id, open(o, 'rb'), "Document (Photo) added")
                 with open('path/imp_'+'e_'+str(message.chat.id), 'wb') as f:
@@ -170,11 +188,12 @@ def start_polling():
             except Exception as e:
                 bot.reply_to(message,e )
 
-        bot.polling(none_stop=True, interval=1)
+        bot.polling(none_stop=True, interval=0.5)
     except:
         start_polling()
         print('Trouble Caused!!!')
         
 print('Server online.\nLog:')
 start_polling()
+
 

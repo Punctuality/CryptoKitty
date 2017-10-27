@@ -20,7 +20,7 @@ def downld_img(url, path):
     im.save(path+".jpg","jpeg")
 
 def rnd_img_parsed(query):
-    url = 'https://yandex.ru/images/search?isize=small&text='+str(query)
+    url = 'https://yandex.ru/images/search?text='+str(query)
     r = requests.get(url)
     html = lxml.html.fromstring(r.text)
     img = html.xpath("//img/@src")

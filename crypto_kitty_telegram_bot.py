@@ -10,7 +10,7 @@
 # In[1]:
 
 
-token = 'Your_Api'
+token = 'Your_API'
 
 import telebot
 from decode_kitty_Tbot import *
@@ -78,7 +78,11 @@ def start_polling():
         @bot.message_handler(func=lambda message: True, commands=['send'], content_types=['text'])
         def sndfd(message):
             text = dcrypt(opop('path/text_'+str(message.chat.id)))
-            fdbk = opop('feedback_data')
+            fdbk = []
+            try:
+            	fdbk = opop('feedback_data')
+            except:
+            	fdbk = []
             fdbk.append([str(message.chat.id), text])
             save(fdbk, 'feedback_data')
             bot.send_message(message.chat.id, "Your message sended, thanks!")

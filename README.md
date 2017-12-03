@@ -1,8 +1,7 @@
 # CryptoKitty
-CryptoGraphy in lovely pictures. Love for everyone.
+CryptoGraphy in lovely pictures.
 ---
-You could use this code to make your own bot. But you need you own Telegram API.
-I don`t know what to write there so I`ll just write smt.
+You could use this code to make your own bot. But you need your own Telegram API
 ---
 
 #Oh, my own bot.
